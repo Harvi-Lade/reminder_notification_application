@@ -1,0 +1,19 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+*.dll
+*.dylib
+
+# Log files
+*.log
+
+# Database files
+*.sqlite
+*.db
+
+# Pycharm files (optional - prevents tracking IDE-specific settings)
+.idea/
+*.iml
+
+config/
