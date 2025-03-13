@@ -16,5 +16,5 @@ __pycache__/
 .idea/
 *.iml
 
-__pycache__
-#config/
+config/__pycache__
+config/
