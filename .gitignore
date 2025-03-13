@@ -17,4 +17,4 @@ __pycache__/
 *.iml
 
 config/__pycache__
-config/
+#config/
