@@ -203,7 +203,8 @@ class ReminderManager:
                 - "year": Display reminders for a specific year.
         """
 
-        query = "SELECT id, title, description, reminder_time, email, recurrence, notified FROM reminders ORDER BY reminder_time ASC;"
+        # query = "SELECT id, title, description, reminder_time, email, recurrence, notified FROM reminders ORDER BY reminder_time ASC;"
+        query = "SELECT id, title, description, reminder_time, email, recurrence, notified FROM reminders"
         params = ()
 
         if filter_type == "date":
@@ -213,6 +214,8 @@ class ReminderManager:
             print(f"Reminders for {date_input}")
             query += " WHERE reminder_time LIKE ?"
             params = (f"{date_input}%",)
+            # Add ORDER BY after constructing the WHERE clause
+            query += " ORDER BY reminder_time ASC"
 
         elif filter_type == "month":
             month_input = get_valid_input("Enter month (YYYY-MM) or type 'menu' to return to menu): ", validate_month)
@@ -220,6 +223,7 @@ class ReminderManager:
                 return
             query += " WHERE strftime('%Y-%m', reminder_time) = ?"
             params = (month_input,)
+            query += " ORDER BY reminder_time ASC"
 
         elif filter_type == "year":
             year_input = get_valid_input("Enter year (YYYY) or type 'menu' to return to menu): ", validate_year)
@@ -227,7 +231,10 @@ class ReminderManager:
                 return
             query += " WHERE strftime('%Y', reminder_time) = ?"
             params = (year_input,)
+            query += " ORDER BY reminder_time ASC"
 
+        # Add ORDER BY after constructing the WHERE clause
+        query += " ORDER BY reminder_time ASC"
         reminders = self.db_manager.fetch_all(query, params)
 
         if not reminders:
