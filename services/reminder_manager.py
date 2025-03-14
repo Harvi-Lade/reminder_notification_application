@@ -158,7 +158,7 @@ class ReminderManager:
 
             # Reset notified status if user updates the reminder_time
             if datetime.strptime(new_reminder_time, '%Y-%m-%d %H:%M') > datetime.now():
-                self.scheduler.update_reminder_status(reminder_id, False)  # Reset notified to False
+                self.db_manager.update_reminder_status(reminder_id, False)  # Reset notified to False
 
             print(f"✅ Reminder {reminder_id} updated successfully!")
 

@@ -81,17 +81,17 @@ class ReminderScheduler:
         next_24_hours = (datetime.now() + timedelta(hours=24)).strftime("%Y-%m-%d %H:%M:%S")
         return self.db_manager.fetch_all(query, (current_time, next_24_hours))
 
-    def update_reminder_status(self, reminder_id: int, notified: bool = True) -> None:
-        """
-        Mark a reminder as notified.
-
-        Args:
-            reminder_id (int): ID of the reminder.
-            notified (bool): Whether the reminder has been notified. Defaults to True.
-        """
-
-        query = "UPDATE reminders SET notified = ? WHERE id = ?"
-        self.db_manager.execute(query, (int(notified), reminder_id))
+    # def update_reminder_status(self, reminder_id: int, notified: bool = True) -> None:
+    #     """
+    #     Mark a reminder as notified.
+    #
+    #     Args:
+    #         reminder_id (int): ID of the reminder.
+    #         notified (bool): Whether the reminder has been notified. Defaults to True.
+    #     """
+    #
+    #     query = "UPDATE reminders SET notified = ? WHERE id = ?"
+    #     self.db_manager.execute(query, (int(notified), reminder_id))
 
     def clean_old_reminders(self) -> None:
         """
@@ -170,7 +170,7 @@ class ReminderScheduler:
                     notification_service.check_reminder(reminder_dict)
 
                     # Mark reminder as notified
-                    self.update_reminder_status(reminder_dict["id"])
+                    self.db_manager.update_reminder_status(reminder_dict["id"])
 
                     # Handle recurrence
                     if reminder_dict["recurrence"] != "none":
