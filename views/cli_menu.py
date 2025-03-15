@@ -69,7 +69,7 @@ class ShowMenu:
                 else:
                     email = None  # Store None if empty
 
-                recurrence = input("Enter recurrence (none/daily/weekly/monthly) (or press Enter to skip): ").strip()
+                recurrence = input("Enter recurrence (none/daily/weekly/monthly/yearly) (or press Enter to skip): ").strip()
                 if recurrence:  # Validate only if the user entered something
                     while not validate_recurrence(recurrence):
                         recurrence = input("❌ Invalid recurrence. Enter again (or press Enter to skip): ").strip()
