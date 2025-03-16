@@ -30,6 +30,9 @@ def validate_title(title: str, existing_titles: Optional[set[str]] = None) -> bo
         print("❌ Keep title between 3 - 100 characters.")
         return False
 
+    if existing_titles is None:
+        existing_titles = set()
+
     # ✅ Case-insensitive uniqueness check
     if title.lower() in {t.lower() for t in existing_titles}:
         print("❌ Title must be unique. This title is already in use.")

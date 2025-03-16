@@ -298,4 +298,6 @@ class ReminderManager:
         """
         query = "SELECT title FROM reminders"
         result = self.db_manager.fetch_all(query)
+        if result is None:
+            return set()
         return {row[0] for row in result}
