@@ -6,10 +6,10 @@ from typing import Tuple, List, Any
 
 
 class DBManager:
-    def __init__(self) -> None:
-        """Initialize database connection and ensure the table exists."""
-
-        self.create_table()
+    def __init__(self, db_name: str = DB_NAME, create_table: bool = True) -> None:
+        self.db_name = db_name
+        if create_table:
+            self.create_table()
 
     @staticmethod
     def create_table() -> None:

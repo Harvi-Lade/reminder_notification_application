@@ -68,12 +68,18 @@ class ReminderManager:
         result = self.db_manager.fetch_all(query, (reminder_id,))
         return result[0] if result else None
 
-    def edit_reminder(self) -> None:
+    def edit_reminder_cli(self) -> None:
         """
-        Edits an existing reminder by selecting it from the database.
+        Edits an existing reminder through the CLI.
 
-        Prompts the user to select a reminder and update its details.
-        Allows keeping existing values if no new input is provided.
+        - Prompts the user to select a reminder and update its details.
+        - Allows keeping existing values if no new input is provided.
+        - Uses input validation to ensure proper formatting.
+
+        Note:
+        - This method is specifically for CLI-based editing.
+        - For programmatic editing (used in tests), see `edit_reminder`.
+        - Test cases for editing reminders directly use `edit_reminder` instead of simulating CLI input.
         """
         # Fetch and display all reminders ordering them by time
         reminders = self.db_manager.fetch_all("SELECT id, title, reminder_time FROM reminders ORDER BY reminder_time ASC;")
@@ -301,3 +307,40 @@ class ReminderManager:
         if result is None:
             return set()
         return {row[0] for row in result}
+
+    def edit_reminder(self, reminder_id: int, title: str, description: str, reminder_time: str, email: Optional[str],
+                      recurrence: str) -> None:
+        """
+        Edits an existing reminder directly in the database.
+
+        Args:
+            reminder_id (int): ID of the reminder to edit.
+            title (str): New title for the reminder.
+            description (str): New description for the reminder.
+            reminder_time (str): New date and time for the reminder in 'YYYY-MM-DD HH:MM' format.
+            email (Optional[str]): New email for the reminder (if any).
+            recurrence (str): New recurrence pattern (none/daily/weekly/monthly).
+
+        Note:
+        - This method directly updates the reminder in the database.
+        - For CLI-based editing, use `edit_reminder_cli`.
+        - Test cases for editing reminders use this method instead of CLI-based interaction.
+        """
+        reminder_data = self.get_reminder_by_id(reminder_id)
+        if not reminder_data:
+            print("❌ Reminder ID not found.")
+            return
+
+        # Update in DB
+        query = """
+            UPDATE reminders
+            SET title = ?, description = ?, reminder_time = ?, email = ?, recurrence = ?
+            WHERE id = ?
+        """
+        self.db_manager.execute(query, (title, description, reminder_time, email, recurrence, reminder_id))
+
+        # Reset notified status if reminder_time is updated to a future time
+        if datetime.strptime(reminder_time, '%Y-%m-%d %H:%M') > datetime.now():
+            self.db_manager.update_reminder_status(reminder_id, False)
+
+        print(f"✅ Reminder {reminder_id} updated successfully!")

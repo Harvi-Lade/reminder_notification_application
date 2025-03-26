@@ -151,6 +151,10 @@ class NotificationService:
             return
 
         for reminder in due_reminders:
-            self.check_reminder(reminder)
+            try:
+                print(f"🔍 Due Reminder: \"{reminder['title']}\"")
+                self.check_reminder(reminder)
+            except Exception as e:
+                logging.error(f"Failed to send reminder '{reminder['title']}': {e}")
 
         print("✅ All due reminders processed!")

@@ -198,6 +198,7 @@ def validate_reminder_id(user_input: str) -> bool:
         return True
     else:
         print("❌ Invalid choice! Please select a valid ID from the list above.")
+        return False
 
 def get_valid_input(prompt: str, validation_func: Optional[Callable[[str], bool]] = None) -> str:
     """

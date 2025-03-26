@@ -85,7 +85,7 @@ class ShowMenu:
                 self.reminder_manager.view_reminders()
 
             elif choice == "3":
-                self.reminder_manager.edit_reminder()
+                self.reminder_manager.edit_reminder_cli()
 
             elif choice == "4":
                 self.reminder_manager.delete_reminder()

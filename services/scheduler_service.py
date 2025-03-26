@@ -43,8 +43,14 @@ class ReminderScheduler:
             day = min(reminder_time.day, calendar.monthrange(year, month)[1])  # Ensure valid day
             next_time = reminder_time.replace(year=year, month=month, day=day)
 
+        # elif recurrence == "yearly":
+        #     next_time = reminder_time.replace(year=reminder_time.year + 1)
         elif recurrence == "yearly":
-            next_time = reminder_time.replace(year=reminder_time.year + 1)
+            try:
+                next_time = reminder_time.replace(year=reminder_time.year + 1)
+            except ValueError:
+                # Handle Feb 29 to Feb 28 for non-leap years
+                next_time = reminder_time.replace(year=reminder_time.year + 1, day=28)
 
         print(f"🔄 Recurrence: {recurrence} | Old: {reminder_time} | Next: {next_time}")
 
@@ -80,18 +86,6 @@ class ReminderScheduler:
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         next_24_hours = (datetime.now() + timedelta(hours=24)).strftime("%Y-%m-%d %H:%M:%S")
         return self.db_manager.fetch_all(query, (current_time, next_24_hours))
-
-    # def update_reminder_status(self, reminder_id: int, notified: bool = True) -> None:
-    #     """
-    #     Mark a reminder as notified.
-    #
-    #     Args:
-    #         reminder_id (int): ID of the reminder.
-    #         notified (bool): Whether the reminder has been notified. Defaults to True.
-    #     """
-    #
-    #     query = "UPDATE reminders SET notified = ? WHERE id = ?"
-    #     self.db_manager.execute(query, (int(notified), reminder_id))
 
     def clean_old_reminders(self) -> None:
         """
